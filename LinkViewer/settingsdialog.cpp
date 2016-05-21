@@ -1,5 +1,6 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include "widget.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :QWidget(parent), ui(new Ui::SettingsDialog)
 {
@@ -15,13 +16,13 @@ void SettingsDialog::showEvent(QShowEvent *)
 {
     if (Settings != NULL)
     {
-        ui->AutoCheckBox->setChecked(Settings->AutoLoad);
-        ui->LinkCountDial->setValue(Settings->HistoryLength);
-        ui->DialDisplay->setText(QString::number(Settings->HistoryLength));
+        ui->AutoCheckBox->setChecked(Settings->GetBool("AutoLoad") == 1);
+        ui->LinkCountDial->setValue(Settings->GetInt("LinkHistory"));
+        ui->DialDisplay->setText(Settings->Get("LinkHistory"));
         //Hotkeys
-        ui->OpenHotkeyEdit->setText(Settings->OpenHotkey);
-        ui->CloseHotkeyEdit->setText(Settings->CloseHotkey);
-        ui->AutoHotkeyEdit->setText(Settings->AutoHotkey);
+        ui->OpenHotkeyEdit->setText(Settings->Get("HotkeyOpen"));
+        ui->CloseHotkeyEdit->setText(Settings->Get("HotkeyClose"));
+        ui->AutoHotkeyEdit->setText(Settings->Get("HotkeyAuto"));
     }
 }
 
@@ -32,32 +33,21 @@ void SettingsDialog::on_DiscardButton_clicked()
 
 void SettingsDialog::on_AcceptButton_clicked()
 {
-    Settings->AutoLoad = ui->AutoCheckBox->checkState();
-    Settings->HistoryLength = ui->DialDisplay->text().toInt();
+    Settings->Set("AutoMode",ui->AutoCheckBox->checkState());
+    Settings->Set("LinkHistory",ui->DialDisplay->text().toInt());
     //Hotkeys
-    Settings->OpenHotkey = ui->OpenHotkeyEdit->toPlainText();
-    Settings->CloseHotkey = ui->CloseHotkeyEdit->toPlainText();
-    Settings->AutoHotkey = ui->AutoHotkeyEdit->toPlainText();
+    Settings->Set("HotkeyOpen",ui->OpenHotkeyEdit->toPlainText());
+    Settings->Set("HotkeyClose",ui->CloseHotkeyEdit->toPlainText());
+    Settings->Set("HotkeyAuto",ui->AutoHotkeyEdit->toPlainText());
 
     Settings->SaveFile();
+
     this->hide();
+
+    qApp->exit(1337);
 }
 
 void SettingsDialog::on_LinkCountDial_sliderMoved(int position)
 {
     ui->DialDisplay->setText(QString::number(position));
-}
-
-void SettingsDialog::on_AutoCheckBox_stateChanged(int)
-{
-    if (ui->AutoCheckBox->checkState())
-    {
-        ui->LinkCountDial->setEnabled(false);
-        ui->CloseHotkeyEdit->setEnabled(false);
-    }
-    else
-    {
-        ui->LinkCountDial->setEnabled(true);
-        ui->CloseHotkeyEdit->setEnabled(true);
-    }
 }
