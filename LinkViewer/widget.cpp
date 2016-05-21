@@ -8,8 +8,6 @@
 
 Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
 {
-    setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
-
     ui->setupUi(this);
     ui->listWidget->setFrameStyle( QFrame::NoFrame );
     ui->listWidget->setAttribute(Qt::WA_TransparentForMouseEvents, true);
@@ -21,8 +19,19 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
     Settings = new SettingsManager();
     Settings->LoadFile();
 
+    if(!Settings->GetBool("FixedWin"))
+        this->show();
+
+    if (Settings->GetBool("LockWin"))
+        setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    else
+        setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+
     if (Settings->GetBool("RememberPos"))
-        this->move(Settings->GetVec("RememberPos").toPoint());
+        this->move(Settings->GetVec("Pos").toPoint());
+
+    if (Settings->GetBool("RememberSize"))
+        this->setGeometry(this->pos().x(), this->pos().y(), Settings->GetSize("Size").width(), Settings->GetSize("Size").height());
 
     QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
     ui->WebView->load(QUrl("http://mroliverblank.com/wp-content/uploads/2012/05/headline-lockup.png"));
@@ -165,6 +174,7 @@ void Widget::Load()
 {
     if (ui->listWidget->count() > 0)
     {
+        this->show();
         ui->WebView->load(QUrl(ui->listWidget->item(CurURLIndex)->text()));
         delete ui->listWidget->item(CurURLIndex);
     }
@@ -175,12 +185,22 @@ void Widget::TimerPulse()
     CheckURLMemory();
     CheckConfigMemory();
 
+    bool Save = false;
+
     if(Settings->GetBool("RememberPos") && this->pos() != Settings->GetVec("Pos").toPoint())
     {
         Settings->Set("Pos", this->pos());
-        Settings->SaveFile();
+        Save = true;
     }
 
+    if(Settings->GetBool("RememberSize") && this->size() != Settings->GetSize("Size"))
+    {
+        Settings->Set("Size", this->size());
+        Save = true;
+    }
+
+    if (Save)
+        Settings->SaveFile();
 }
 
 void Widget::NotificationTimerPulse()
@@ -211,6 +231,8 @@ void Widget::HandleOpenLink()
 void Widget::HandleCloseLink()
 {
     ui->WebView->load(QUrl("http://mroliverblank.com/wp-content/uploads/2012/05/headline-lockup.png"));
+    if(Settings->GetBool("FixedWin"))
+        this->hide();
 }
 
 void Widget::resizeEvent(QResizeEvent *e)

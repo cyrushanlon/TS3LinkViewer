@@ -5,6 +5,8 @@
 SettingsDialog::SettingsDialog(QWidget *parent) :QWidget(parent), ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
+
+    setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -16,7 +18,18 @@ void SettingsDialog::showEvent(QShowEvent *)
 {
     if (Settings != NULL)
     {
-        ui->AutoCheckBox->setChecked(Settings->GetBool("AutoLoad") == 1);
+        ui->RemPosCheckBox->setChecked(Settings->GetBool("RememberPos"));
+        ui->RemSizeCheckBox->setChecked(Settings->GetBool("RememberSize"));
+        ui->HideCheckBox->setChecked(Settings->GetBool("FixedWin"));
+        ui->LockWinCheckBox->setChecked(Settings->GetBool("LockWin"));
+
+        ui->PosXEdit->setText(QString::number(Settings->GetVec("Pos").x()));
+        ui->PosYEdit->setText(QString::number(Settings->GetVec("Pos").y()));
+
+        ui->SizeXEdit->setText(QString::number(Settings->GetVec("Size").x()));
+        ui->SizeYEdit->setText(QString::number(Settings->GetVec("Size").y()));
+
+        ui->AutoCheckBox->setChecked(Settings->GetBool("AutoLoad"));
         ui->LinkCountDial->setValue(Settings->GetInt("LinkHistory"));
         ui->DialDisplay->setText(Settings->Get("LinkHistory"));
         //Hotkeys
@@ -33,8 +46,16 @@ void SettingsDialog::on_DiscardButton_clicked()
 
 void SettingsDialog::on_AcceptButton_clicked()
 {
+    Settings->Set("RememberPos", ui->RemPosCheckBox->checkState());
+    Settings->Set("RememberSize", ui->RemSizeCheckBox->checkState());
+    Settings->Set("FixedWin", ui->HideCheckBox->checkState());
+    Settings->Set("LockWin", ui->LockWinCheckBox->checkState());
+
+    Settings->Set("Pos", QVector2D(ui->PosXEdit->text().toInt(), ui->PosYEdit->text().toInt()));
+    Settings->Set("Size", QVector2D(ui->SizeXEdit->text().toInt(), ui->SizeYEdit->text().toInt()));
+
     Settings->Set("AutoMode",ui->AutoCheckBox->checkState());
-    Settings->Set("LinkHistory",ui->DialDisplay->text().toInt());
+    Settings->Set("LinkHistory",ui->DialDisplay->text());
     //Hotkeys
     Settings->Set("HotkeyOpen",ui->OpenHotkeyEdit->toPlainText());
     Settings->Set("HotkeyClose",ui->CloseHotkeyEdit->toPlainText());

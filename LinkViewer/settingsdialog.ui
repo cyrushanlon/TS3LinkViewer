@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>424</width>
+    <width>462</width>
     <height>523</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>404</width>
+        <width>442</width>
         <height>449</height>
        </rect>
       </property>
@@ -80,6 +80,9 @@
              <widget class="QCheckBox" name="RemPosCheckBox">
               <property name="text">
                <string>Remember the position of the window between launches.</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>

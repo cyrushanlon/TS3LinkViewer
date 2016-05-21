@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
 
     App = new QApplication(argc, argv);
     MainWin = new Widget();
-    MainWin->show();
     ReturnCode = App->exec();
   }
   while(ReturnCode == RESTART_CODE);

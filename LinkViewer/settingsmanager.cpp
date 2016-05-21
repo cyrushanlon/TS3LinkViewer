@@ -39,6 +39,17 @@ QVector2D SettingsManager::GetVec(QString Key)
         return QVector2D();
 }
 
+QSize SettingsManager::GetSize(QString Key)
+{
+    if (Map.contains(Key))
+    {
+        QStringList Split = Map[Key].split(";");
+        return QSize(Split[0].toInt(), Split[1].toInt());
+    }
+    else
+        return QSize();
+}
+
 bool SettingsManager::GetBool(QString Key)
 {
     if (Map.contains(Key))
@@ -57,26 +68,34 @@ int SettingsManager::GetInt(QString Key)
 
 void SettingsManager::Set(QString Key, QString Val)
 {
-    Map[Key] = Val;
+    Map.insert(Key, Val);
 }
 
 void SettingsManager::Set(QString Key, QVector2D Val)
-{
-    Map[Key] = QString::number(Val.x()) + ";" + QString::number(Val.y());
+{    
+    Map.insert(Key, QString::number(Val.x()) + ";" + QString::number(Val.y()));
 }
 
 void SettingsManager::Set(QString Key, QPoint Val)
 {
-    Map[Key] = QString::number(Val.x()) + ";" + QString::number(Val.y());
+    Map.insert(Key, QString::number(Val.x()) + ";" + QString::number(Val.y()));
+}
+
+void SettingsManager::Set(QString Key, QSize Val)
+{
+    Map.insert(Key, QString::number(Val.width()) + ";" + QString::number(Val.height()));
 }
 
 void SettingsManager::Set(QString Key, bool Val)
 {
-    if (Val)
-        Map[Key] == "1";
-    else
-        Map[Key] == "0";
+    QString Value;
 
+    if (Val)
+        Value = "1";
+    else
+        Value = "0";
+
+    Map.insert(Key, Value);
 }
 
 void SettingsManager::LoadFile()
@@ -106,15 +125,16 @@ void SettingsManager::LoadFile()
 
         QTextStream OutStream(&NewFile);
 
-        OutStream << "RememberPos,0";
-        OutStream << "RememberSize,0";
-        OutStream << "FixedWin,0";
-        OutStream << "LockWin,0";
-        OutStream << "AutoMode,1";
-        OutStream << "LinkHistory,10";
-        OutStream << "HotkeyOpen,ctrl+shift+Right";
-        OutStream << "HotkeyClose,ctrl+shift+Left";
-        OutStream << "HotkeyAuto,ctrl+shift+Down";
+        OutStream   << "RememberPos,0\n"
+                    << "RememberSize,0\n"
+                    << "Size,640;480\n"
+                    << "FixedWin,0\n"
+                    << "LockWin,0\n"
+                    << "AutoMode,1\n"
+                    << "LinkHistory,10\n"
+                    << "HotkeyOpen,ctrl+shift+Right\n"
+                    << "HotkeyClose,ctrl+shift+Left\n"
+                    << "HotkeyAuto,ctrl+shift+Down\n";
 
         NewFile.close();
 
