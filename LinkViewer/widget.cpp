@@ -1,5 +1,6 @@
 #include "widget.h"
 #include "ui_widget.h"
+#include "windows.h"
 
 #include <QBuffer>
 #include <QDataStream>
@@ -19,11 +20,11 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
     Settings = new SettingsManager();
     Settings->LoadFile();
 
-    if(!Settings->GetBool("FixedWin"))
-        this->show();
-
     if (Settings->GetBool("LockWin"))
+    {
         setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+        SetWindowPos(reinterpret_cast<HWND>(this->winId()), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+    }
     else
         setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
@@ -52,6 +53,9 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
     NotificationTimer = new QTimer(this);
     connect(NotificationTimer, SIGNAL(timeout()), this, SLOT(NotificationTimerPulse()));
     NotificationTimer->setSingleShot(true);
+
+    if(!Settings->GetBool("FixedWin"))
+        this->show();
 }
 
 Widget::~Widget()
@@ -175,6 +179,7 @@ void Widget::Load()
     if (ui->listWidget->count() > 0)
     {
         this->show();
+
         ui->WebView->load(QUrl(ui->listWidget->item(CurURLIndex)->text()));
         delete ui->listWidget->item(CurURLIndex);
     }
@@ -187,16 +192,27 @@ void Widget::TimerPulse()
 
     bool Save = false;
 
-    if(Settings->GetBool("RememberPos") && this->pos() != Settings->GetVec("Pos").toPoint())
+    if (Settings->GetBool("FixedWin"))
     {
-        Settings->Set("Pos", this->pos());
-        Save = true;
-    }
+        if (Settings->GetBool("RememberPos"))
+            this->move(Settings->GetVec("Pos").toPoint());
 
-    if(Settings->GetBool("RememberSize") && this->size() != Settings->GetSize("Size"))
+        if (Settings->GetBool("RememberSize"))
+            this->setGeometry(this->pos().x(), this->pos().y(), Settings->GetSize("Size").width(), Settings->GetSize("Size").height());
+    }
+    else
     {
-        Settings->Set("Size", this->size());
-        Save = true;
+        if(Settings->GetBool("RememberPos") && this->pos() != Settings->GetVec("Pos").toPoint())
+        {
+            Settings->Set("Pos", this->pos());
+            Save = true;
+        }
+
+        if(Settings->GetBool("RememberSize") && this->size() != Settings->GetSize("Size"))
+        {
+            Settings->Set("Size", this->size());
+            Save = true;
+        }
     }
 
     if (Save)
