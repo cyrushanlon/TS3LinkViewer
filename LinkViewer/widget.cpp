@@ -198,7 +198,10 @@ void Widget::TimerPulse()
             this->move(Settings->GetVec("Pos").toPoint());
 
         if (Settings->GetBool("RememberSize"))
-            this->setGeometry(this->pos().x(), this->pos().y(), Settings->GetSize("Size").width(), Settings->GetSize("Size").height());
+        {
+            auto Size = Settings->GetSize("Size");
+            this->setGeometry(this->pos().x(), this->pos().y(), Size.width(), Size.height());
+        }
     }
     else
     {
