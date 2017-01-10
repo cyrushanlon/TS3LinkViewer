@@ -19,10 +19,9 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
 
-    void ChangeURL(QString URL);
-
 private slots:
     void TimerPulse();
+    void NotificationTimerPulse();
     void HandleToggleAuto();
     void HandleDeleteLink();
     void HandleOpenLink();
@@ -42,6 +41,7 @@ private:
     QSharedMemory ConfigMemory;
 
     QTimer *Timer;
+    QTimer *NotificationTimer;
 
     int CurURLIndex = 0;
 

@@ -25,10 +25,7 @@ public:
 private slots:
     void on_DiscardButton_clicked();
     void on_AcceptButton_clicked();
-
     void on_LinkCountDial_sliderMoved(int position);
-
-    void on_AutoCheckBox_stateChanged(int arg1);
 
 private:
     Ui::SettingsDialog *ui;
