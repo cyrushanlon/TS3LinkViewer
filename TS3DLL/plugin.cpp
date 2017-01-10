@@ -35,7 +35,7 @@ static struct TS3Functions ts3Functions;
 #define _strcpy(dest, destSize, src) { strncpy(dest, src, destSize-1); (dest)[destSize-1] = '\0'; }
 #endif
 
-#define PLUGIN_API_VERSION 20
+#define PLUGIN_API_VERSION 21
 
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
@@ -53,13 +53,13 @@ MemoryManager MemManager;
 #ifdef _WIN32
 /* Helper function to convert wchar_T to Utf-8 encoded strings on Windows */
 static int wcharToUtf8(const wchar_t* str, char** result) {
-	int outlen = WideCharToMultiByte(CP_UTF8, 0, str, -1, 0, 0, 0, 0);
-	*result = (char*)malloc(outlen);
-	if (WideCharToMultiByte(CP_UTF8, 0, str, -1, *result, outlen, 0, 0) == 0) {
-		*result = NULL;
-		return -1;
-	}
-	return 0;
+    int outlen = WideCharToMultiByte(CP_UTF8, 0, str, -1, 0, 0, 0, 0);
+    *result = (char*)malloc(outlen);
+    if (WideCharToMultiByte(CP_UTF8, 0, str, -1, *result, outlen, 0, 0) == 0) {
+        *result = NULL;
+        return -1;
+    }
+    return 0;
 }
 #endif
 
@@ -76,7 +76,7 @@ const char* ts3plugin_name()
 
 /* Plugin version */
 const char* ts3plugin_version() {
-	return "1.0";
+    return "0.2a";
 }
 
 /* Plugin API version. Must be the same as the clients API major version, else the plugin fails to load. */
@@ -120,11 +120,10 @@ int ts3plugin_init()
 	ts3Functions.getAppPath(appPath, PATH_BUFSIZE);
 	ts3Functions.getResourcesPath(resourcesPath, PATH_BUFSIZE);
 	ts3Functions.getConfigPath(configPath, PATH_BUFSIZE);
-	ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE);
+    ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, pluginID);
 
 	printf("TS3 Auto Link Viewer: App path: %s\nResources path: %s\nConfig path: %s\nPlugin path: %s\n", appPath, resourcesPath, configPath, pluginPath);
-
-	LPCWSTR ExecName = TEXT("D:\\Teamspeak 3 - Copy\\plugins\\autolink_plugin\\TS3LinkViewer.exe");
+    LPCWSTR ExecName = TEXT("C:\\Users\\Cyrus\\AppData\\Roaming\\TS3Client\\plugins\\autolink_plugin\\TS3LinkViewer.exe");
 
 	std::ifstream f(ExecName);
 
@@ -167,26 +166,20 @@ int ts3plugin_init()
 
 /* Custom code called right before the plugin is unloaded */
 void ts3plugin_shutdown() {
-	/* Your plugin cleanup code here */
-	printf("TS3 Auto Link Viewer: shutdown\n");
+    /* Your plugin cleanup code here */
+    printf("PLUGIN: shutdown\n");
 
-	/*
-	* Note:
-	* If your plugin implements a settings dialog, it must be closed and deleted here, else the
-	* TeamSpeak client will most likely crash (DLL removed but dialog from DLL code still open).
-	*/
+    /*
+     * Note:
+     * If your plugin implements a settings dialog, it must be closed and deleted here, else the
+     * TeamSpeak client will most likely crash (DLL removed but dialog from DLL code still open).
+     */
 
-	TerminateProcess(pi.hProcess, 0);
-
-	// Close process and thread handles. 
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
-
-	/* Free pluginID if we registered it */
-	if (pluginID) {
-		free(pluginID);
-		pluginID = NULL;
-	}
+    /* Free pluginID if we registered it */
+    if(pluginID) {
+        free(pluginID);
+        pluginID = NULL;
+    }
 }
 
 /****************************** Optional functions ********************************/
