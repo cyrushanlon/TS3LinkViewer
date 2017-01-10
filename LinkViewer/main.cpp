@@ -10,8 +10,11 @@
 int main(int argc, char *argv[])
 {
     int ReturnCode;
+    QApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+
     QPointer<QApplication> App;
     QPointer<Widget> MainWin;
+
     do
     {
         if(App) App->quit();

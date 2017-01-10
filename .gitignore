@@ -77,3 +77,21 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# built stuff
+LinkViewer/ui_widget.h
+LinkViewer/ui_settingsdialog.h
+
+LinkViewer/release/
+TS3DLL/release/
+LinkViewer/debug/
+TS3DLL/debug/
+
+LinkViewer/LinkViewercfg
+LinkViewer/Makefile
+TS3DLL/Makefile
+Makefile
+
+*.Debug
+*.Release
+
