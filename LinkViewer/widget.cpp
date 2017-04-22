@@ -23,7 +23,7 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
     if (Settings->GetBool("LockWin"))
     {
         setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-        SetWindowPos(reinterpret_cast<HWND>(this->winId()), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        SetWindowPos(reinterpret_cast<HWND>(this->winId()), HWND_DESKTOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     }
     else
         setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
@@ -35,7 +35,7 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
         this->setGeometry(this->pos().x(), this->pos().y(), Settings->GetSize("Size").width(), Settings->GetSize("Size").height());
 
     QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
-    ui->WebView->load(QUrl("http://mroliverblank.com/wp-content/uploads/2012/05/headline-lockup.png"));
+    ui->WebView->load(QUrl("https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png"));
 
     Hotkey_ToggleAuto.setShortcut(QKeySequence(Settings->Get("HotkeyAuto")), true);
     connect(&Hotkey_ToggleAuto, SIGNAL(activated()), this, SLOT(HandleToggleAuto()));
@@ -165,6 +165,7 @@ void Widget::CheckConfigMemory()
         SettingsForm.move(this->pos());
         SettingsForm.SetSettings(Settings);
         SettingsForm.show();
+        this->hide();
     }
 
     memset((char*)ConfigMemory.data(), '\0', ConfigMemory.size());
@@ -249,7 +250,7 @@ void Widget::HandleOpenLink()
 }
 void Widget::HandleCloseLink()
 {
-    ui->WebView->load(QUrl("http://mroliverblank.com/wp-content/uploads/2012/05/headline-lockup.png"));
+    ui->WebView->load(QUrl("https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png"));
     if(Settings->GetBool("FixedWin"))
         this->hide();
 }

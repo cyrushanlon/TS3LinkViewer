@@ -2,11 +2,14 @@
 <ui version="4.0">
  <class>SettingsDialog</class>
  <widget class="QWidget" name="SettingsDialog">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>462</width>
+    <width>466</width>
     <height>523</height>
    </rect>
   </property>
@@ -15,6 +18,9 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::TabFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -33,8 +39,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>442</width>
-        <height>449</height>
+        <width>432</width>
+        <height>493</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">

@@ -15,7 +15,7 @@ SettingsDialog::~SettingsDialog()
 }
 
 void SettingsDialog::showEvent(QShowEvent *)
-{
+{    
     if (Settings != NULL)
     {
         ui->RemPosCheckBox->setChecked(Settings->GetBool("RememberPos"));
