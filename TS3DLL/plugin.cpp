@@ -7,6 +7,7 @@
 #ifdef _WIN32
 #pragma warning (disable : 4100)  /* Disable Unreferenced parameter warning */
 #include <Windows.h>
+#include <tlhelp32.h>
 #endif
 
 #include <stdio.h>
@@ -44,7 +45,7 @@ static struct TS3Functions ts3Functions;
 #define CHANNELINFO_BUFSIZE 512
 #define RETURNCODE_BUFSIZE 128
 
-PROCESS_INFORMATION pi;
+PROCESS_INFORMATION linkViewerPI;
 
 static char* pluginID = NULL;
 
@@ -76,7 +77,7 @@ const char* ts3plugin_name()
 
 /* Plugin version */
 const char* ts3plugin_version() {
-    return "0.2b";
+    return "0.2.3";
 }
 
 /* Plugin API version. Must be the same as the clients API major version, else the plugin fails to load. */
@@ -132,7 +133,6 @@ int ts3plugin_init()
     LPCWSTR ExecName = pathToExe.c_str();
 
 	std::ifstream f(ExecName);
-
 	//the file exists
 	if (f.good())
 	{
@@ -142,7 +142,7 @@ int ts3plugin_init()
 		// set the size of the structures
 		ZeroMemory(&si, sizeof(si));
 		si.cb = sizeof(si);
-		ZeroMemory(&pi, sizeof(pi));
+        ZeroMemory(&linkViewerPI, sizeof(linkViewerPI));
 
 		// start the program up
 		if (!CreateProcess(
@@ -155,8 +155,9 @@ int ts3plugin_init()
 			NULL,						// Use parent's environment block
 			NULL,						// Use parent's starting directory 
 			&si,						// Pointer to STARTUPINFO structure
-			&pi							// Pointer to PROCESS_INFORMATION structure
+            &linkViewerPI				// Pointer to PROCESS_INFORMATION structure
 			))
+
 			return 1;
 	}
 	else
@@ -180,6 +181,8 @@ void ts3plugin_shutdown() {
      * If your plugin implements a settings dialog, it must be closed and deleted here, else the
      * TeamSpeak client will most likely crash (DLL removed but dialog from DLL code still open).
      */
+
+    TerminateProcess(linkViewerPI.hProcess, 0);
 
     /* Free pluginID if we registered it */
     if(pluginID) {
