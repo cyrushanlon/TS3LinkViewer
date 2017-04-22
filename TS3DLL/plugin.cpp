@@ -35,7 +35,7 @@ static struct TS3Functions ts3Functions;
 #define _strcpy(dest, destSize, src) { strncpy(dest, src, destSize-1); (dest)[destSize-1] = '\0'; }
 #endif
 
-#define PLUGIN_API_VERSION 21
+#define PLUGIN_API_VERSION 22
 
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
@@ -76,7 +76,7 @@ const char* ts3plugin_name()
 
 /* Plugin version */
 const char* ts3plugin_version() {
-    return "0.2a";
+    return "0.2b";
 }
 
 /* Plugin API version. Must be the same as the clients API major version, else the plugin fails to load. */
@@ -122,8 +122,14 @@ int ts3plugin_init()
 	ts3Functions.getConfigPath(configPath, PATH_BUFSIZE);
     ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, pluginID);
 
+    std::string pathToFolder(pluginPath);
+    std::wstring pathToExe(pathToFolder.length(), L' ');
+    std::copy(pathToFolder.begin(), pathToFolder.end(), pathToExe.begin());
+    pathToExe += L"autolink_plugin/TS3LinkViewer.exe";
+
 	printf("TS3 Auto Link Viewer: App path: %s\nResources path: %s\nConfig path: %s\nPlugin path: %s\n", appPath, resourcesPath, configPath, pluginPath);
-    LPCWSTR ExecName = TEXT("C:\\Users\\Cyrus\\AppData\\Roaming\\TS3Client\\plugins\\autolink_plugin\\TS3LinkViewer.exe");
+
+    LPCWSTR ExecName = pathToExe.c_str();
 
 	std::ifstream f(ExecName);
 

@@ -95,3 +95,5 @@ Makefile
 *.Debug
 *.Release
 
+*.ilk
+build
