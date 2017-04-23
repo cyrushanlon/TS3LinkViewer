@@ -19,9 +19,9 @@ void SettingsDialog::showEvent(QShowEvent *)
     if (Settings != NULL)
     {
         ui->RemPosCheckBox->setChecked(Settings->GetBool("RememberPos"));
-        ui->RemSizeCheckBox->setChecked(Settings->GetBool("RememberSize"));
-        ui->HideCheckBox->setChecked(Settings->GetBool("FixedWin"));
-        ui->LockWinCheckBox->setChecked(Settings->GetBool("LockWin"));
+        ui->HideCheckBox->setChecked(Settings->GetBool("HideWin"));
+        ui->HideBarCheckBox->setChecked(Settings->GetBool("HideBar"));
+        ui->LockPosCheckBox->setChecked(Settings->GetBool("LockPos"));
 
         ui->PosXEdit->setText(QString::number(Settings->GetVec("Pos").x()));
         ui->PosYEdit->setText(QString::number(Settings->GetVec("Pos").y()));
@@ -35,7 +35,7 @@ void SettingsDialog::showEvent(QShowEvent *)
         //Hotkeys
         ui->OpenHotkeyEdit->setText(Settings->Get("HotkeyOpen"));
         ui->CloseHotkeyEdit->setText(Settings->Get("HotkeyClose"));
-        ui->AutoHotkeyEdit->setText(Settings->Get("HotkeyAuto"));
+        ui->AutoHotkeyEdit->setText(Settings->Get("HotkeyAuto"));     
     }
 }
 
@@ -47,9 +47,9 @@ void SettingsDialog::on_DiscardButton_clicked()
 void SettingsDialog::on_AcceptButton_clicked()
 {
     Settings->Set("RememberPos", ui->RemPosCheckBox->checkState());
-    Settings->Set("RememberSize", ui->RemSizeCheckBox->checkState());
-    Settings->Set("FixedWin", ui->HideCheckBox->checkState());
-    Settings->Set("LockWin", ui->LockWinCheckBox->checkState());
+    Settings->Set("HideWin", ui->HideCheckBox->checkState());
+    Settings->Set("HideBar", ui->HideBarCheckBox->checkState());
+    Settings->Set("LockPos", ui->LockPosCheckBox->checkState());
 
     Settings->Set("Pos", QVector2D(ui->PosXEdit->text().toInt(), ui->PosYEdit->text().toInt()));
     Settings->Set("Size", QVector2D(ui->SizeXEdit->text().toInt(), ui->SizeYEdit->text().toInt()));

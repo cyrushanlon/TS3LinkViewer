@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>466</width>
-    <height>523</height>
+    <height>594</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -39,8 +39,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>432</width>
-        <height>493</height>
+        <width>446</width>
+        <height>520</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -85,17 +85,10 @@
             <item>
              <widget class="QCheckBox" name="RemPosCheckBox">
               <property name="text">
-               <string>Remember the position of the window between launches.</string>
+               <string>Remember the position and size of the window.</string>
               </property>
               <property name="checked">
                <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="RemSizeCheckBox">
-              <property name="text">
-               <string>Remember the size of the window between launches.</string>
               </property>
              </widget>
             </item>
@@ -107,9 +100,16 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="LockWinCheckBox">
+             <widget class="QCheckBox" name="HideBarCheckBox">
               <property name="text">
-               <string>Lock the windows size and position from being changed.</string>
+               <string>Hide the title bar and borders and prevent moving and resizing.</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="LockPosCheckBox">
+              <property name="text">
+               <string>Lock the default window size and position.</string>
               </property>
              </widget>
             </item>
@@ -179,7 +179,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Dimensions:</string>
+                   <string>Size:</string>
                   </property>
                  </widget>
                 </item>

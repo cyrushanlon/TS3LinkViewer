@@ -20,7 +20,7 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
     Settings = new SettingsManager();
     Settings->LoadFile();
 
-    if (Settings->GetBool("LockWin"))
+    if (Settings->GetBool("HideBar"))
     {
         setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
         SetWindowPos(reinterpret_cast<HWND>(this->winId()), HWND_DESKTOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
@@ -29,10 +29,11 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
         setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
     if (Settings->GetBool("RememberPos"))
+    {
         this->move(Settings->GetVec("Pos").toPoint());
-
-    if (Settings->GetBool("RememberSize"))
         this->setGeometry(this->pos().x(), this->pos().y(), Settings->GetSize("Size").width(), Settings->GetSize("Size").height());
+    }
+
 
     QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
     ui->WebView->load(QUrl("https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png"));
@@ -54,7 +55,7 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
     connect(NotificationTimer, SIGNAL(timeout()), this, SLOT(NotificationTimerPulse()));
     NotificationTimer->setSingleShot(true);
 
-    if(!Settings->GetBool("FixedWin"))
+    if(!Settings->GetBool("HideWin"))
         this->show();
 }
 
@@ -193,27 +194,21 @@ void Widget::TimerPulse()
 
     bool Save = false;
 
-    if (Settings->GetBool("FixedWin"))
+    /*if (Settings->GetBool("HideWin") || Settings->GetBool("HideBar"))
     {
-        if (Settings->GetBool("RememberPos"))
-            this->move(Settings->GetVec("Pos").toPoint());
-
-        if (Settings->GetBool("RememberSize"))
+        //if we dont want the window to move set it back to the stored values
+        if (this->pos() != Settings->GetVec("Pos").toPoint() || this->size() != Settings->GetSize("Size"))
         {
+            this->move(Settings->GetVec("Pos").toPoint());
             auto Size = Settings->GetSize("Size");
             this->setGeometry(this->pos().x(), this->pos().y(), Size.width(), Size.height());
         }
     }
-    else
+    else*/
     {
-        if(Settings->GetBool("RememberPos") && this->pos() != Settings->GetVec("Pos").toPoint())
+        if(Settings->GetBool("RememberPos") && !Settings->GetBool("LockPos") && (this->pos() != Settings->GetVec("Pos").toPoint() || this->size() != Settings->GetSize("Size")))
         {
             Settings->Set("Pos", this->pos());
-            Save = true;
-        }
-
-        if(Settings->GetBool("RememberSize") && this->size() != Settings->GetSize("Size"))
-        {
             Settings->Set("Size", this->size());
             Save = true;
         }
@@ -251,20 +246,39 @@ void Widget::HandleOpenLink()
 void Widget::HandleCloseLink()
 {
     ui->WebView->load(QUrl("https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png"));
-    if(Settings->GetBool("FixedWin"))
+    if(Settings->GetBool("HideWin"))
         this->hide();
 }
 
 void Widget::resizeEvent(QResizeEvent *e)
 {
+    if (Settings->GetBool("HideBar"))
+    {
+        e->ignore();
+    }
+
+    //sort out the ui in the event of a resize
     ui->WebView->setFixedSize(e->size());
     ui->listWidget->setFixedSize(e->size());
 
     int y = e->size().height() - ui->NotificationFrame->geometry().height();
     ui->NotificationFrame->setGeometry(0, y, e->size().width(), e->size().height());
 }
+void Widget::moveEvent(QMoveEvent *e)
+{
+    //"When the widget receives this event, it is already at the new position."
+    if (Settings->GetBool("HideBar"))
+    {
+        e->ignore();
+        this->move(Settings->GetVec("Pos").toPoint());
+        auto Size = Settings->GetSize("Size");
+        this->setGeometry(this->pos().x(), this->pos().y(), Size.width(), Size.height());
+    }
+}
+
 void Widget::closeEvent(QCloseEvent *)
 {
+    //get rid of the setting form in case it exists
     SettingsForm.close();
     this->close();
 }

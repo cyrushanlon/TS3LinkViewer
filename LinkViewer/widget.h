@@ -55,6 +55,7 @@ private:
 
 protected:
     void resizeEvent(QResizeEvent *e);
+    void moveEvent(QMoveEvent *e);
     void closeEvent(QCloseEvent *e);
 };
 

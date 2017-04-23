@@ -3,18 +3,6 @@
 #include <QFile>
 #include <QFileInfo>
 
-//Remember Pos
-//Remember Size
-//No fixed win
-//Lock win
-//Pos xy
-//size xy
-//auto mode
-//link history
-//Hotkey open
-//Hotkey close
-//Hotkey auto
-
 SettingsManager::SettingsManager()
 {
     LoadFile();
@@ -125,12 +113,13 @@ void SettingsManager::LoadFile()
 
         QTextStream OutStream(&NewFile);
 
-        OutStream   << "RememberPos,0\n"
-                    << "RememberSize,0\n"
-                    << "Size,640;480\n"
-                    << "FixedWin,0\n"
-                    << "LockWin,0\n"
-                    << "AutoMode,1\n"
+        OutStream   << "RememberPos,0\n" //remember where the window is pos + size
+                    << "Size,0;0\n"
+                    << "Pos,0;0\n"
+                    << "HideWin,0\n"
+                    << "LockPos,0\n"
+                    << "HideBar,0\n"
+                    << "AutoLoad,1\n"
                     << "LinkHistory,10\n"
                     << "HotkeyOpen,ctrl+shift+Right\n"
                     << "HotkeyClose,ctrl+shift+Left\n"
