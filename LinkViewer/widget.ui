@@ -106,9 +106,23 @@
     </item>
    </layout>
   </widget>
+  <widget class="QPushButton" name="SettingsButton">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>31</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
   <zorder>WebView</zorder>
   <zorder>listWidget</zorder>
   <zorder>NotificationFrame</zorder>
+  <zorder>SettingsButton</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

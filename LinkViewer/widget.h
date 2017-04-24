@@ -27,6 +27,8 @@ private slots:
     void HandleOpenLink();
     void HandleCloseLink();
 
+    void on_SettingsButton_clicked();
+
 private:
     bool GetURLFromString(QString& Text);
     void UpdateURLList(QString URL);
@@ -35,6 +37,8 @@ private:
     void CheckConfigMemory();
 
     void Load();
+
+    void openSettings();
 
     Ui::Widget *ui;
     QSharedMemory SharedMemory;

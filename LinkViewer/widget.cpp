@@ -34,6 +34,8 @@ Widget::Widget(QWidget *parent) :QWidget(parent),ui(new Ui::Widget)
         this->setGeometry(this->pos().x(), this->pos().y(), Settings->GetSize("Size").width(), Settings->GetSize("Size").height());
     }
 
+    ui->SettingsButton->move(this->width() - ui->SettingsButton->width() * 1.1, this->height() - ui->SettingsButton->height() * 1.1);
+
 
     QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
     ui->WebView->load(QUrl("https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png"));
@@ -163,10 +165,7 @@ void Widget::CheckConfigMemory()
     }
     else if (text == "OpenConfig")
     {
-        SettingsForm.move(this->pos());
-        SettingsForm.SetSettings(Settings);
-        SettingsForm.show();
-        this->hide();
+        openSettings();
     }
 
     memset((char*)ConfigMemory.data(), '\0', ConfigMemory.size());
@@ -263,6 +262,7 @@ void Widget::resizeEvent(QResizeEvent *e)
 
     int y = e->size().height() - ui->NotificationFrame->geometry().height();
     ui->NotificationFrame->setGeometry(0, y, e->size().width(), e->size().height());
+    ui->SettingsButton->move(this->width() - ui->SettingsButton->width() * 1.1, this->height() - ui->SettingsButton->height() * 1.1);
 }
 void Widget::moveEvent(QMoveEvent *e)
 {
@@ -281,4 +281,17 @@ void Widget::closeEvent(QCloseEvent *)
     //get rid of the setting form in case it exists
     SettingsForm.close();
     this->close();
+}
+
+void Widget::on_SettingsButton_clicked()
+{
+       openSettings();
+}
+
+void Widget::openSettings()
+{
+    SettingsForm.move(this->pos());
+    SettingsForm.SetSettings(Settings);
+    SettingsForm.show();
+    this->hide();
 }
