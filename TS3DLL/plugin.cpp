@@ -16,16 +16,16 @@
 #include <assert.h>
 #include <fstream>
 
-#include "teamspeak/public_errors.h"
-#include "teamspeak/public_errors_rare.h"
-#include "teamspeak/public_definitions.h"
-#include "teamspeak/public_rare_definitions.h"
-#include "teamspeak/clientlib_publicdefinitions.h"
-#include "ts3_functions.h"
+#include "teamspeak/public_errors.hpp"
+#include "teamspeak/public_errors_rare.hpp"
+#include "teamspeak/public_definitions.hpp"
+#include "teamspeak/public_rare_definitions.hpp"
+#include "teamspeak/clientlib_publicdefinitions.hpp"
+#include "ts3_functions.hpp"
 
 #include "memorymanager.hpp"
 
-#include "plugin.h"
+#include "plugin.hpp"
 
 static struct TS3Functions ts3Functions;
 

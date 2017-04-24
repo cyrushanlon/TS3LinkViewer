@@ -4,7 +4,8 @@
 TEMPLATE = lib
 TARGET = autolink_plugin
 
-HEADERS += plugin.h \
-    memorymanager.hpp
+HEADERS += \
+    memorymanager.hpp \
+    plugin.hpp
 SOURCES += memorymanager.cpp \
     plugin.cpp

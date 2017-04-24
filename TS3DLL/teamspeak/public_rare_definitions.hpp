@@ -1,7 +1,7 @@
 #ifndef PUBLIC_RARE_DEFINITIONS_H
 #define PUBLIC_RARE_DEFINITIONS_H
 
-#include "public_definitions.h"
+#include "public_definitions.hpp"
 
 //limited length, measured in characters
 #define TS3_MAX_SIZE_CLIENT_NICKNAME_NONSDK 30
