@@ -41,7 +41,9 @@ void SettingsDialog::showEvent(QShowEvent *)
 
 void SettingsDialog::on_DiscardButton_clicked()
 {
-    this->close();
+    this->hide();
+
+    qApp->exit(1337);
 }
 
 void SettingsDialog::on_AcceptButton_clicked()
